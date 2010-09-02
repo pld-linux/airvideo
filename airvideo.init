@@ -39,9 +39,13 @@ start() {
 	fi
 
 	msg_starting "Air-Video Server"
-	daemon --user nobody /usr/bin/java -jar /usr/share/java/AirVideoServerLinux.jar /etc/airvideo.properties
+	daemon --fork --chdir /var/lib/airvideo --pidfile /var/run/airvideo.pid --user nobody /usr/bin/java -jar /usr/share/java/AirVideoServerLinux.jar /etc/airvideo.properties
 	RETVAL=$?
-	[ $RETVAL -eq 0 ] && touch /var/lock/subsys/airvideo
+	if [ $RETVAL -eq 0 ]; then
+		# XXX
+		pgrep -u nobody java > /var/run/airvideo.pid
+		touch /var/lock/subsys/airvideo
+	fi
 }
 
 stop() {
