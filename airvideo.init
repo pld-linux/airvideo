@@ -1,0 +1,98 @@
+#!/bin/sh
+#
+# airvideo	Air-Video Video Streaming Server
+#
+# chkconfig:	345 20 80
+#
+# description:	Air-Video Video Streaming Server
+#
+# processname:	airvideo
+# config:		/etc/airvideo.properties
+# pidfile:		/var/run/airvideo.pid
+#
+# $Id$
+
+# Source function library
+. /etc/rc.d/init.d/functions
+
+# Get network config
+. /etc/sysconfig/network
+
+# Check that networking is up.
+if is_yes "${NETWORKING}"; then
+	if [ ! -f /var/lock/subsys/network -a "$1" != stop -a "$1" != status ]; then
+		msg_network_down "Air-Video Server"
+		exit 1
+	fi
+else
+	exit 0
+fi
+
+# Get service config - may override defaults
+[ -f /etc/sysconfig/airvideo ] && . /etc/sysconfig/airvideo
+
+start() {
+	# Check if the service is already running?
+	if [ -f /var/lock/subsys/airvideo ]; then
+		msg_already_running "Air-Video Server"
+		return
+	fi
+
+	msg_starting "Air-Video Server"
+	daemon --user nobody /usr/bin/java -jar /usr/share/java/AirVideoServerLinux.jar /etc/airvideo.properties
+	RETVAL=$?
+	[ $RETVAL -eq 0 ] && touch /var/lock/subsys/airvideo
+}
+
+stop() {
+	if [ ! -f /var/lock/subsys/airvideo ]; then
+		msg_not_running "Air-Video Server"
+		return
+	fi
+
+	# Stop daemons.
+	msg_stopping "Air-Video Server"
+	killproc --pidfile /var/run/airvideo.pid airvideo -TERM
+	rm -f /var/lock/subsys/airvideo
+}
+
+condrestart() {
+	if [ ! -f /var/lock/subsys/airvideo ]; then
+		msg_not_running "Air-Video Server"
+		RETVAL=$1
+		return
+	fi
+
+	stop
+	start
+}
+
+RETVAL=0
+# See how we were called.
+case "$1" in
+  start)
+	start
+	;;
+  stop)
+	stop
+	;;
+  restart)
+	stop
+	start
+	;;
+  try-restart)
+	condrestart 0
+	;;
+  force-reload)
+	condrestart 7
+	;;
+  status)
+	status --pidfile /var/run/airvideo.pid airvideo java
+	RETVAL=$?
+	;;
+  *)
+	msg_usage "$0 {start|stop|restart|try-restart|force-reload|status}"
+	exit 3
+esac
+
+exit $RETVAL
