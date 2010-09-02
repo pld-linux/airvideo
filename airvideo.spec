@@ -7,7 +7,7 @@
 Summary:	Air-Video Video Streaming Server
 Name:		airvideo
 Version:	2.2.5
-Release:	0.4
+Release:	0.5
 License:	GPL v2+ with LGPL v2+ parts
 Group:		Applications/Multimedia
 Source0:	http://www.inmethod.com/air-video/download/ffmpeg-for-%{version}.tar.bz2
@@ -79,6 +79,8 @@ mv ffmpeg/* .; rmdir ffmpeg
 	--enable-libmp3lame \
 	--enable-libfaad \
 	--disable-decoder=aac \
+	--disable-indevs \
+	--disable-outdevs \
 %ifnarch %{ix86} %{x8664}
 	--disable-mmx \
 %endif
