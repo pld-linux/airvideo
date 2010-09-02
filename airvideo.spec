@@ -7,7 +7,7 @@
 Summary:	Air-Video Video Streaming Server
 Name:		airvideo
 Version:	2.2.5
-Release:	0.3
+Release:	0.4
 License:	GPL v2+ with LGPL v2+ parts
 Group:		Applications/Multimedia
 Source0:	http://www.inmethod.com/air-video/download/ffmpeg-for-%{version}.tar.bz2
@@ -91,7 +91,7 @@ mv ffmpeg/* .; rmdir ffmpeg
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT{%{_sysconfdir},%{_sbindir},%{_javadir},/etc/rc.d/init.d}
+install -d $RPM_BUILD_ROOT{%{_sysconfdir},%{_sbindir},%{_javadir},/etc/rc.d/init.d,/var/lib/airvideo}
 install -p ffmpeg $RPM_BUILD_ROOT%{_sbindir}/%{name}
 install -p %{SOURCE1} $RPM_BUILD_ROOT/etc/rc.d/init.d/%{name}
 
@@ -121,3 +121,5 @@ fi
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/%{name}.properties
 %attr(754,root,root) /etc/rc.d/init.d/%{name}
 %{_javadir}/AirVideoServerLinux.jar
+# XXX, if it really writes something, get dedicated user
+%dir %attr(755,nobody,nobody) /var/lib/airvideo
