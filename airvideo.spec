@@ -7,7 +7,7 @@
 Summary:	Air-Video Video Streaming Server
 Name:		airvideo
 Version:	2.2.5
-Release:	0.5
+Release:	0.8
 License:	GPL v2+ with LGPL v2+ parts
 Group:		Applications/Multimedia
 Source0:	http://www.inmethod.com/air-video/download/ffmpeg-for-%{version}.tar.bz2
@@ -30,7 +30,7 @@ BuildRequires:	rpmbuild(macros) >= 1.470
 Requires:	faac
 Requires:	jpackage-utils
 Requires(post,preun):	/sbin/chkconfig
-Requires:	mpeg4ip
+Requires:	mpeg4ip-server
 Requires:	rc-scripts
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -81,6 +81,7 @@ mv ffmpeg/* .; rmdir ffmpeg
 	--disable-decoder=aac \
 	--disable-indevs \
 	--disable-outdevs \
+	--disable-vaapi \
 %ifnarch %{ix86} %{x8664}
 	--disable-mmx \
 %endif
