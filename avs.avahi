@@ -1,0 +1,4 @@
+<service>
+    <type>_airvideoserver._tcp</type>
+    <port>45631</port>
+</service>
