@@ -3,7 +3,6 @@
 #   http://wiki.birth-online.de/know-how/hardware/apple-iphone/airvideo-server-linux
 # - clarify source files license and remove nosource
 
-%include	/usr/lib/rpm/macros.java
 Summary:	Air-Video Video Streaming Server
 Name:		airvideo
 Version:	2.4.5
